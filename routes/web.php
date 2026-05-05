@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::get('/relatorio/agendamentos/pdf', [RelatorioController::class, 'agendamentosPdf'])->name('relatorio.agendamentos.pdf');
+Route::get('/relatorio/servicos/pdf', [RelatorioController::class, 'servicosPdf'])->name('relatorio.servicos.pdf');
 
 Route::middleware('auth')->group(function () {
     // Dashboard do administrador (protegido)
@@ -102,4 +104,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('servicos', ServicoController::class);
     Route::resource('barbeiros', BarbeiroController::class);
     Route::resource('agendamentos', AgendamentoController::class);
+
+
 });

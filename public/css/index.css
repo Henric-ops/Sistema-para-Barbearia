@@ -168,3 +168,96 @@
     background-color: #202633 !important;
 }
 
+/* ===== AÇÕES PADRONIZADAS ===== */
+.table-actions {
+    display: flex;
+    align-items: center;      /* 🔥 ALINHA PERFEITO */
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* BOTÕES DA TABELA */
+.btn-table-action {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 8px;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+/* EDIT */
+.btn-table-action.btn-outline-primary {
+    color: var(--blue);
+    border: 1px solid var(--blue-dim);
+    background: rgba(77, 142, 240, 0.1);
+}
+
+.btn-table-action.btn-outline-primary:hover {
+    background: var(--blue);
+    color: #fff;
+}
+
+/* DELETE */
+.btn-table-action.btn-danger {
+    color: var(--red);
+    border: 1px solid var(--red-dim);
+    background: rgba(224, 88, 88, 0.1);
+}
+
+.btn-table-action.btn-danger:hover {
+    background: var(--red);
+    color: #fff;
+}
+
+/* ===== RELATÓRIOS ===== */
+
+.report-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: 0.25s;
+    height: 100%;
+}
+
+.report-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.report-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 12px;
+    border-radius: 12px;
+    background: var(--gold-dim);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.report-title {
+    color: #fff;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.report-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.report-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
