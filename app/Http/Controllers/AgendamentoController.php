@@ -21,6 +21,12 @@ class AgendamentoController extends Controller
             $query->where('barbeiro_id', Auth::id());
         }
 
+        if (Auth::user()->isCliente()) {
+            $cliente = Auth::user()->cliente;
+            abort_unless($cliente, 404, 'Perfil de cliente nao encontrado.');
+            $query->where('cliente_id', $cliente->id);
+        }
+
         if ($request->filled('search')) {
             $term = '%' . $request->search . '%';
             $query->where(function ($query) use ($term) {
@@ -54,7 +60,9 @@ class AgendamentoController extends Controller
     public function show(Agendamento $agendamento)
     {
         abort_unless(
-            Auth::user()->isAdministrador() || Auth::id() === $agendamento->barbeiro_id,
+            Auth::user()->isAdministrador()
+                || Auth::id() === $agendamento->barbeiro_id
+                || Auth::user()->cliente?->id === $agendamento->cliente_id,
             403
         );
 
@@ -64,6 +72,8 @@ class AgendamentoController extends Controller
 
     public function edit(Agendamento $agendamento)
     {
+        abort_if(Auth::user()->isCliente(), 403);
+
         if (Auth::user()->isAdministrador()) {
             // Admin acessa todos os agendamentos para editar tudo
             $clientes = Cliente::all();
@@ -79,6 +89,8 @@ class AgendamentoController extends Controller
 
     public function update(UpdateAgendamentoRequest $request, Agendamento $agendamento)
     {
+        abort_if(Auth::user()->isCliente(), 403);
+
         // Admin atualiza qualquer coisa
         if (Auth::user()->isAdministrador()) {
             $agendamento->update($request->validated());

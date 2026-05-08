@@ -74,7 +74,7 @@
                         </li>
                     </ul>
 
-                @else
+                @elseif(auth()->user()->isBarbeiro())
                     {{-- ========== MENU DO BARBEIRO ========== --}}
                     <div class="nav-section-label">Menu</div>
                     <ul style="list-style:none;padding:0">
@@ -88,6 +88,17 @@
                             <a class="nav-link {{ request()->routeIs('barbeiro.agendamentos') ? 'active' : '' }}"
                                 href="{{ route('barbeiro.agendamentos') }}">
                                 <i class="fas fa-calendar-alt"></i> Meus Agendamentos
+                            </a>
+                        </li>
+                    </ul>
+                @else
+                    {{-- ========== MENU DO CLIENTE ========== --}}
+                    <div class="nav-section-label">Menu</div>
+                    <ul style="list-style:none;padding:0">
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('cliente.dashboard') ? 'active' : '' }}"
+                                href="{{ route('cliente.dashboard') }}">
+                                <i class="fas fa-calendar-check"></i> Meus Agendamentos
                             </a>
                         </li>
                     </ul>
@@ -120,8 +131,10 @@
                     <p>
                         @if(auth()->user()->isAdministrador())
                             Visão geral da sua barbearia —
-                        @else
+                        @elseif(auth()->user()->isBarbeiro())
                             Seus agendamentos —
+                        @else
+                            Seus horarios —
                         @endif
                         <span id="js-date" style="color:var(--gold)"></span>
                     </p>

@@ -3,8 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>Relatório de Agendamentos</title>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* RESET & BASE */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
         
         body {
             font-family: Arial, sans-serif;
@@ -16,6 +22,7 @@
             padding: 20px;
         }
         
+        /* HEADER */
         .header {
             text-align: center;
             margin-bottom: 25px;
@@ -23,53 +30,55 @@
             border-bottom: 2px solid #eee;
         }
         
-        .header h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
+        .header h1 { 
+            font-size: 22px; 
+            margin-bottom: 5px; 
         }
-        
+
+        .header p { 
+            font-size: 14px; 
+            color: #666; 
+        }
+
+        /* PERÍODO */
         .periodo {
-            text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
-            font-size: 13px;
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
             margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #eee;
-        }
-        
-        .stat {
             text-align: center;
-        }
-        
-        .stat .number {
-            font-size: 24px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 3px;
+            color: #444;
         }
         
-        .stat .label {
-            font-size: 11px;
+        /* SEÇÕES */
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
             text-transform: uppercase;
-            color: #666;
+            letter-spacing: 0.5px;
+        }
+        
+        /* TABELAS */
+        .table-container {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            overflow: hidden;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
         }
         
         th, td {
-            padding: 10px 8px;
+            padding: 12px 10px;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #f0f0f0;
         }
         
         th {
@@ -77,101 +86,207 @@
             font-weight: bold;
             font-size: 11px;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
-        
+
+        tr:hover td {
+            background: #f9f9f9;
+        }
+
+        /* RESUMO */
+        .resumo-table th,
+        .resumo-table td {
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .resumo-table .number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .resumo-table .label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* STATUS */
         .status {
-            padding: 3px 8px;
+            padding: 4px 8px;
             border-radius: 4px;
             font-size: 10px;
             font-weight: bold;
             text-transform: uppercase;
+            display: inline-block;
         }
-        
-        .status-agendado { background: #e3f2fd; color: #1565c0; }
-        .status-concluido { background: #e8f5e8; color: #2e7d32; }
-        .status-cancelado { background: #ffebee; color: #c62828; }
-        
+
+        .status-agendado {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-concluido {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-cancelado {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* EMPTY */
         .empty {
             text-align: center;
-            padding: 40px;
-            color: #666;
+            padding: 50px 20px;
+            color: #888;
             font-style: italic;
+            border: 1px dashed #eee;
         }
-        
+
+        /* FOOTER */
         .footer {
             text-align: center;
-            padding-top: 20px;
+            padding-top: 25px;
             border-top: 1px solid #eee;
             font-size: 11px;
-            color: #666;
+            color: #777;
         }
-        
+
+        /* PRINT */
         @media print {
-            body { margin: 0; padding: 10px; }
+            body { 
+                margin: 0; 
+                padding: 10px; 
+            }
         }
     </style>
 </head>
+
 <body>
+
+    <!-- HEADER -->
     <div class="header">
         <h1>BarberHub</h1>
         <p>Relatório de Agendamentos</p>
     </div>
-    
+
+    <!-- PERÍODO -->
     <div class="periodo">
-        Período: {{ \Carbon\Carbon::createFromFormat('Y-m-d', $dataInicio)->format('d/m/Y') }} 
-        até {{ \Carbon\Carbon::createFromFormat('Y-m-d', $dataFim)->format('d/m/Y') }}
+        Período:
+        {{ \Carbon\Carbon::createFromFormat('Y-m-d', $dataInicio)->format('d/m/Y') }}
+        até
+        {{ \Carbon\Carbon::createFromFormat('Y-m-d', $dataFim)->format('d/m/Y') }}
     </div>
-    
-    <div class="stats">
-        <div class="stat">
-            <div class="number">{{ $total }}</div>
-            <div class="label">Total</div>
+
+    <!-- RESUMO -->
+    <div class="section">
+        <div class="section-title">
+            Resumo Geral
         </div>
-        <div class="stat">
-            <div class="number">{{ $agendados }}</div>
-            <div class="label">Agendados</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ $concluidos }}</div>
-            <div class="label">Concluídos</div>
-        </div>
-        <div class="stat">
-            <div class="number">{{ $cancelados }}</div>
-            <div class="label">Cancelados</div>
-        </div>
-    </div>
-    
-    @if($agendamentos->count() > 0)
-        <table>
-            <thead>
-                <tr>
-                    <th>Data/Hora</th>
-                    <th>Cliente</th>
-                    <th>Barbeiro</th>
-                    <th>Serviço</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($agendamentos as $agendamento)
+
+        <div class="table-container">
+            <table class="resumo-table">
+                <thead>
                     <tr>
-                        <td>{{ $agendamento->data_hora_inicio->format('d/m/Y H:i') }}</td>
-                        <td>{{ $agendamento->cliente->nome ?? 'N/A' }}</td>
-                        <td>{{ $agendamento->barbeiro->name ?? 'N/A' }}</td>
-                        <td>{{ $agendamento->servico->nome ?? 'N/A' }}</td>
-                        <td>R$ {{ number_format($agendamento->servico->preco ?? 0, 2, ',', '.') }}</td>
-                        <td><span class="status status-{{ $agendamento->status }}">{{ ucfirst($agendamento->status) }}</span></td>
+                        <th>Total</th>
+                        <th>Agendados</th>
+                        <th>Concluídos</th>
+                        <th>Cancelados</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="empty">Nenhum agendamento encontrado</div>
-    @endif
-    
-    <div class="footer">
-        Gerado em {{ now()->format('d/m/Y H:i:s') }}
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td class="number">{{ $total }}</td>
+                        <td class="number">{{ $agendados }}</td>
+                        <td class="number">{{ $concluidos }}</td>
+                        <td class="number">{{ $cancelados }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+    <!-- LISTAGEM -->
+    <div class="section">
+
+        <div class="section-title">
+            Lista de Agendamentos
+        </div>
+
+        @if($agendamentos->count() > 0)
+
+            <div class="table-container">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th>Barbeiro</th>
+                            <th>Serviço</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach($agendamentos as $agendamento)
+
+                            <tr>
+
+                                <td>
+                                    {{ $agendamento->data_hora_inicio->format('d/m/Y H:i') }}
+                                </td>
+
+                                <td>
+                                    {{ $agendamento->cliente->nome ?? 'N/A' }}
+                                </td>
+
+                                <td>
+                                    {{ $agendamento->barbeiro->name ?? 'N/A' }}
+                                </td>
+
+                                <td>
+                                    {{ $agendamento->servico->nome ?? 'N/A' }}
+                                </td>
+
+                                <td>
+                                    R$ {{ number_format($agendamento->servico->preco ?? 0, 2, ',', '.') }}
+                                </td>
+
+                                <td>
+                                    <span class="status status-{{ $agendamento->status }}">
+                                        {{ ucfirst($agendamento->status) }}
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        @endforeach
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        @else
+
+            <div class="empty">
+                Nenhum agendamento encontrado
+            </div>
+
+        @endif
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        Gerado em {{ now()->format('d/m/Y H:i:s') }} | BarberHub
+    </div>
+
 </body>
 </html>

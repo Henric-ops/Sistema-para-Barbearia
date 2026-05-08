@@ -13,7 +13,15 @@ class UpdateAgendamentoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        if (auth()->user()?->isAdministrador()) {
+            return true;
+        }
+
+        $agendamento = $this->route('agendamento');
+
+        return auth()->user()?->isBarbeiro()
+            && $agendamento
+            && auth()->id() === $agendamento->barbeiro_id;
     }
 
     /**

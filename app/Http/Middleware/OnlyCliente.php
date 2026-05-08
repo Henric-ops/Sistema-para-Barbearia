@@ -6,16 +6,16 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class OnlyAdministrador
+class OnlyCliente
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()?->isAdministrador()) {
+        if (auth()->user()?->isCliente()) {
             return $next($request);
         }
 
-        if (auth()->user()?->isCliente()) {
-            return redirect()->route('cliente.dashboard')->with('error', 'Acesso nao autorizado');
+        if (auth()->user()?->isAdministrador()) {
+            return redirect()->route('dashboard')->with('error', 'Acesso nao autorizado');
         }
 
         return redirect()->route('barbeiro.dashboard')->with('error', 'Acesso nao autorizado');

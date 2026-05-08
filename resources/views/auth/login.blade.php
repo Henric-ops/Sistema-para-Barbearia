@@ -793,7 +793,12 @@
 
             </form>
 
-
+            <div class="card-footer">
+                <p class="footer-text mb-0">
+                    Ainda nao tem conta?
+                    <a href="{{ route('register') }}">Cadastre-se como cliente</a>
+                </p>
+            </div>
 
         </div><!-- /.auth-card -->
     </div><!-- /.auth-container -->

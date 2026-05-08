@@ -36,6 +36,10 @@ class User extends Authenticatable
         return $this->hasMany(Agendamento::class, 'barbeiro_id');
     }
 
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class);
+    }
 
     public function isAdministrador(): bool
     {
@@ -46,5 +50,10 @@ class User extends Authenticatable
     public function isBarbeiro(): bool
     {
         return $this->cargo === 'barbeiro';
+    }
+
+    public function isCliente(): bool
+    {
+        return $this->cargo === 'cliente';
     }
 }

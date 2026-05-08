@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['nome', 'cpf', 'email', 'telefone', 'endereco'])]
+#[Fillable(['user_id', 'nome', 'cpf', 'email', 'telefone', 'endereco'])]
 class Cliente extends Model
 {
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function agendamentos()
     {

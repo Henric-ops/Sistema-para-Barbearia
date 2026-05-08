@@ -6,6 +6,7 @@ use App\Http\Controllers\AgendamentoController;
 use App\Http\Controllers\ServicoController;
 use App\Http\Controllers\BarbeiroController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClienteDashboardController;
 use App\Http\Controllers\RelatorioAgendamentosController;
 use App\Http\Controllers\RelatorioServicosController;
 use App\Models\Agendamento;
@@ -19,9 +20,13 @@ Route::get('/', function () {
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
+Route::get('cadastro', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('cadastro', [AuthController::class, 'register']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
-Route::get('/relatorio/agendamentos/pdf', [RelatorioController::class, 'agendamentosPdf'])->name('relatorio.agendamentos.pdf');
-Route::get('/relatorio/servicos/pdf', [RelatorioController::class, 'servicosPdf'])->name('relatorio.servicos.pdf');
+Route::middleware(['auth', 'only.admin'])->group(function () {
+    Route::get('/relatorio/agendamentos/pdf', [RelatorioAgendamentosController::class, 'relatorioAgendamentos'])->name('relatorio.agendamentos.pdf');
+    Route::get('/relatorio/servicos/pdf', [RelatorioServicosController::class, 'relatorioServicos'])->name('relatorio.servicos.pdf');
+});
 
 Route::middleware('auth')->group(function () {
     // Dashboard do administrador (protegido)
@@ -100,6 +105,10 @@ Route::middleware('auth')->group(function () {
     });
 
     // Rotas disponíveis para todos (mas dados filtrados por cargo)
+    Route::middleware('only.cliente')->group(function () {
+        Route::get('cliente/dashboard', ClienteDashboardController::class)->name('cliente.dashboard');
+    });
+
     Route::resource('clientes', ClienteController::class);
     Route::resource('servicos', ServicoController::class);
     Route::resource('barbeiros', BarbeiroController::class);
