@@ -665,14 +665,12 @@
 </head>
 
 <body>
-    <!-- Loading Overlay (original) -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
     </div>
 
     <div class="auth-container">
 
-        <!-- ══ SIDEBAR  ══ -->
         <div class="auth-sidebar fade-in-up">
             <div class="sidebar-bloom"></div>
             <div class="sidebar-watermark"><i class="fas fa-scissors"></i></div>
@@ -728,7 +726,6 @@
             <form method="POST" action="{{ route('login') }}" id="loginForm">
                 @csrf
 
-                {{-- Email --}}
                 <div class="form-group">
                     <label class="field-label" for="email">
                         <i class="fas fa-envelope me-1"></i> E-mail
@@ -743,7 +740,6 @@
                     @enderror
                 </div>
 
-                {{-- Senha --}}
                 <div class="form-group">
                     <label class="field-label" for="password">
                         <i class="fas fa-lock me-1"></i> Senha
@@ -800,13 +796,12 @@
                 </p>
             </div>
 
-        </div><!-- /.auth-card -->
-    </div><!-- /.auth-container -->
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function () {
-            /* ── Toggle password visibility (original behaviour) ── */
             const toggleBtn = document.getElementById('togglePassword');
             const pwdInput = document.getElementById('password');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -819,7 +814,6 @@
                 });
             }
 
-            /* ── Submit loading state ── */
             const form = document.getElementById('loginForm');
             const submitBtn = document.getElementById('submitBtn');
 

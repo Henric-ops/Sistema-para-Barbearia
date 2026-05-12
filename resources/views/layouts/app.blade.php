@@ -29,7 +29,6 @@
             <nav class="sidebar-nav">
 
                 @if(auth()->user()->isAdministrador())
-                    {{-- ========== MENU DO ADMINISTRADOR ========== --}}
                     <div class="nav-section-label">Principal</div>
                     <ul style="list-style:none;padding:0">
                         <li class="nav-item">
@@ -75,7 +74,6 @@
                     </ul>
 
                 @elseif(auth()->user()->isBarbeiro())
-                    {{-- ========== MENU DO BARBEIRO ========== --}}
                     <div class="nav-section-label">Menu</div>
                     <ul style="list-style:none;padding:0">
                         <li class="nav-item">

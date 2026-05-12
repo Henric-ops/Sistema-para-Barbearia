@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <div class="container-fluid py-4">
 
-        {{-- ALERTAS --}}
         @if(session('success'))
             <div class="alert d-flex align-items-center gap-2">
                 <i class="fas fa-check-circle"></i>
@@ -13,7 +12,6 @@
             </div>
         @endif
 
-        {{-- HEADER --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
             <div>
                 <h2 class="page-title d-flex align-items-center gap-2">
@@ -32,7 +30,6 @@
             @endif
         </div>
 
-        {{-- BUSCA --}}
         <form method="GET" class="mb-4">
             <div class="input-group">
                 <span class="input-group-text">
