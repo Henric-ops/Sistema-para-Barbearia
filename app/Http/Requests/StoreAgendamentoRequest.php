@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Agendamento;
+use App\Services\AgendaService;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -52,19 +52,14 @@ class StoreAgendamentoRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             if ($this->filled(['barbeiro_id', 'data_hora_inicio', 'data_hora_fim'])) {
-                $conflict = Agendamento::where('barbeiro_id', $this->barbeiro_id)
-                    ->where(function ($query) {
-                        $query->whereBetween('data_hora_inicio', [$this->data_hora_inicio, $this->data_hora_fim])
-                            ->orWhereBetween('data_hora_fim', [$this->data_hora_inicio, $this->data_hora_fim])
-                            ->orWhere(function ($query) {
-                                $query->where('data_hora_inicio', '<', $this->data_hora_inicio)
-                                    ->where('data_hora_fim', '>', $this->data_hora_fim);
-                            });
-                    })
-                    ->exists();
+                $conflict = app(AgendaService::class)->barbeiroTemConflito(
+                    (int) $this->barbeiro_id,
+                    $this->data_hora_inicio,
+                    $this->data_hora_fim
+                );
 
                 if ($conflict) {
-                    $validator->errors()->add('data_hora_inicio', 'O barbeiro já possui agendamento nesse horário.');
+                    $validator->errors()->add('data_hora_inicio', 'O barbeiro ja possui agendamento nesse horario.');
                 }
             }
         });

@@ -3,144 +3,147 @@
 @section('title', 'Meu Painel')
 
 @section('content')
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
-</style>
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
-<div class="barb-page">
-
-    <div class="barb-hero a1">
-        <div>
-            <h1 class="barb-hero-greeting">
-                Olá, <span>{{ explode(' ', auth()->user()->name)[0] }}</span> 👋
-            </h1>
-            <div class="barb-hero-date">
-                <strong id="barb-date"></strong>
-            </div>
-        </div>
-
-        @if($proximoCliente)
-            <div class="next-client-pill">
-                <div class="pill-icon"><i class="fas fa-clock"></i></div>
+    <div class="conteudo-pagina">
+        <div class="destaque-operacional">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
                 <div>
-                    <div class="pill-label">Próximo cliente</div>
-                    <div class="pill-value">
-                        {{ $proximoCliente->cliente->nome }}
-                        <span class="pill-time">
-                            {{ $proximoCliente->data_hora_inicio->format('H:i') }}
-                        </span>
+                    <h3>Olá, {{ explode(' ', auth()->user()->name)[0] }}</h3>
+                    <p>
+                        Você tem {{ $agendamentosHoje->count() }} atendimento(s) na agenda de hoje.
+                    </p>
+                </div>
+
+                @if($proximoCliente)
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="icone-indicador"><i class="fas fa-clock"></i></span>
+                        <div>
+                            <div class="texto-secundario small text-uppercase fw-bold">Proximo cliente</div>
+                            <div class="fw-bold">
+                                {{ $proximoCliente->cliente->nome }}
+                                <span class="texto-horario ms-2">{{ $proximoCliente->data_hora_inicio->format('H:i') }}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        @endif
-    </div>
-
-    <div class="barb-kpis a2">
-
-        <div class="barb-kpi kpi-gold">
-            <div class="barb-kpi-icon"><i class="fas fa-calendar-check"></i></div>
-            <div>
-                <div class="barb-kpi-val">{{ $agendamentosCount }}</div>
-                <div class="barb-kpi-label">Total de agendamentos</div>
+                @endif
             </div>
         </div>
 
-        <div class="barb-kpi kpi-green">
-            <div class="barb-kpi-icon"><i class="fas fa-circle-check"></i></div>
-            <div>
-                <div class="barb-kpi-val">{{ $concluidosCount }}</div>
-                <div class="barb-kpi-label">Concluídos</div>
+        <div class="grade-indicadores">
+            <div class="cartao-indicador">
+                <div class="cartao-indicador-topo">
+                    <span class="icone-indicador"><i class="fas fa-calendar-check"></i></span>
+                </div>
+                <div>
+                    <div class="valor-indicador">{{ $agendamentosCount }}</div>
+                    <div class="rotulo-indicador">Total de agendamentos</div>
+                </div>
+            </div>
+
+            <div class="cartao-indicador">
+                <div class="cartao-indicador-topo">
+                    <span class="icone-indicador verde"><i class="fas fa-circle-check"></i></span>
+                </div>
+                <div>
+                    <div class="valor-indicador">{{ $concluidosCount }}</div>
+                    <div class="rotulo-indicador">Concluidos</div>
+                </div>
+            </div>
+
+            <div class="cartao-indicador">
+                <div class="cartao-indicador-topo">
+                    <span class="icone-indicador vermelho"><i class="fas fa-circle-xmark"></i></span>
+                </div>
+                <div>
+                    <div class="valor-indicador">{{ $canceladosCount }}</div>
+                    <div class="rotulo-indicador">Cancelados</div>
+                </div>
+            </div>
+
+            <div class="cartao-indicador">
+                <div class="cartao-indicador-topo">
+                    <span class="icone-indicador azul"><i class="fas fa-calendar-day"></i></span>
+                </div>
+                <div>
+                    <div class="valor-indicador">{{ $agendamentosHoje->count() }}</div>
+                    <div class="rotulo-indicador">Hoje</div>
+                </div>
             </div>
         </div>
 
-        <div class="barb-kpi kpi-red">
-            <div class="barb-kpi-icon"><i class="fas fa-circle-xmark"></i></div>
-            <div>
-                <div class="barb-kpi-val">{{ $canceladosCount }}</div>
-                <div class="barb-kpi-label">Cancelados</div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="barb-content">
-
-      <!-- agenda de hoje -->
-
-    <div class="barb-panel a3">
-            <div class="barb-panel-head">
-                <div class="barb-panel-title">
-                    <i class="fas fa-calendar-day"></i> Agenda de Hoje
+        <div class="painel">
+            <div class="painel-cabecalho">
+                <div>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-calendar-day"></i>
+                        Agenda de hoje
+                    </h3>
+                    <div class="painel-subtitulo">Atendimentos previstos para este dia.</div>
                 </div>
-                <span class="barb-panel-badge">{{ $agendamentosHoje->count() }}</span>
+                <a href="{{ route('barbeiro.agendamentos') }}" class="btn botao-secundario">
+                    <i class="fas fa-list"></i>
+                    Ver todos
+                </a>
             </div>
 
-            @if($agendamentosHoje->isEmpty())
-                <div class="barb-empty">
-                    <i class="fas fa-sun"></i>
-                    <p>Nenhum agendamento para hoje.</p>
-                </div>
-            @else
-                <div style="overflow-x:auto">
-                    <table class="barb-table">
-                        <thead>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle tabela-sistema">
+                    <thead>
+                        <tr>
+                            <th>Horario</th>
+                            <th>Cliente</th>
+                            <th>Servico</th>
+                            <th>Status</th>
+                            <th class="text-end">Acao</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($agendamentosHoje as $agendamento)
                             <tr>
-                                <th>Horário</th>
-                                <th>Cliente</th>
-                                <th>Serviço</th>
-                                <th>Status</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($agendamentosHoje as $ag)
-                                <tr>
-                                    <td>
-                                        <div class="barb-time">{{ $ag->data_hora_inicio->format('H:i') }}</div>
-                                        <div class="barb-time-end">até {{ $ag->data_hora_fim->format('H:i') }}</div>
-                                    </td>
-                                    <td>
-                                        <div class="barb-client-name">{{ $ag->cliente->nome }}</div>
-                                    </td>
-                                    <td>
-                                        <span class="barb-service-tag">
-                                            <i class="fas fa-scissors" style="font-size:.65rem"></i>
-                                            {{ $ag->servico->nome }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="s-chip s-chip--{{ $ag->status }}">
-                                            {{ ucfirst($ag->status) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('agendamentos.edit', $ag) }}"
-                                           style="color:var(--text-muted);font-size:.8rem;text-decoration:none;transition:color .2s"
-                                           onmouseover="this.style.color='var(--gold)'"
-                                           onmouseout="this.style.color='var(--text-muted)'"
-                                           title="Editar">
+                                <td>
+                                    <span class="texto-horario">
+                                        {{ $agendamento->data_hora_inicio->format('H:i') }}
+                                        - {{ $agendamento->data_hora_fim->format('H:i') }}
+                                    </span>
+                                </td>
+                                <td><strong>{{ $agendamento->cliente->nome }}</strong></td>
+                                <td>
+                                    <span class="selo-servico">
+                                        <i class="fas fa-scissors"></i>
+                                        {{ $agendamento->servico->nome }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-agendamento {{ $agendamento->status }}">
+                                        {{ ucfirst($agendamento->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <a
+                                            href="{{ route('agendamentos.edit', $agendamento) }}"
+                                            class="botao-icone"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-title="Atualizar status"
+                                            aria-label="Atualizar status"
+                                        >
                                             <i class="fas fa-pen-to-square"></i>
                                         </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5">
+                                    <div class="estado-vazio">
+                                        <i class="fas fa-sun"></i>
+                                        <p class="mb-0">Nenhum agendamento para hoje.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
-    
     </div>
-
-</div>
-
-<script>
-    const el = document.getElementById('barb-date');
-    if (el) {
-        el.textContent = new Date().toLocaleDateString('pt-BR', {
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-        });
-    }
-</script>
-
 @endsection

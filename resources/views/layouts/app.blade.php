@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/componentes.css') }}" rel="stylesheet" />
 </head>
 
 <body>
@@ -30,7 +31,7 @@
 
                 @if(auth()->user()->isAdministrador())
                     <div class="nav-section-label">Principal</div>
-                    <ul style="list-style:none;padding:0">
+                    <ul class="lista-navegacao">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
                                 href="{{ route('dashboard') }}">
@@ -52,19 +53,19 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('servicos.*') ? 'active' : '' }}"
                                 href="{{ route('servicos.index') }}">
-                                <i class="fas fa-cut"></i> Serviços
+                                <i class="fas fa-cut"></i> Servicos
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('relatorios.*') ? 'active' : '' }}"
                                 href="{{ route('relatorios.index') }}">
-                                <i class="fas fa-chart-bar"></i> Relatórios
+                                <i class="fas fa-chart-bar"></i> Relatorios
                             </a>
                         </li>
                     </ul>
 
-                    <div class="nav-section-label">Gestão</div>
-                    <ul style="list-style:none;padding:0">
+                    <div class="nav-section-label">Gestao</div>
+                    <ul class="lista-navegacao">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('barbeiros.*') ? 'active' : '' }}"
                                 href="{{ route('barbeiros.index') }}">
@@ -75,7 +76,7 @@
 
                 @elseif(auth()->user()->isBarbeiro())
                     <div class="nav-section-label">Menu</div>
-                    <ul style="list-style:none;padding:0">
+                    <ul class="lista-navegacao">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('barbeiro.dashboard') ? 'active' : '' }}"
                                 href="{{ route('barbeiro.dashboard') }}">
@@ -92,7 +93,7 @@
                 @else
                     {{-- ========== MENU DO CLIENTE ========== --}}
                     <div class="nav-section-label">Menu</div>
-                    <ul style="list-style:none;padding:0">
+                    <ul class="lista-navegacao">
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('cliente.dashboard') ? 'active' : '' }}"
                                 href="{{ route('cliente.dashboard') }}">
@@ -105,15 +106,15 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="user-chip" onclick="document.getElementById('logout-form').submit();">
+                <button type="button" class="user-chip botao-usuario" data-enviar-formulario="#logout-form">
                     <div class="avatar">{{ substr(auth()->user()->name, 0, 2) }}</div>
                     <div class="user-info">
                         <div class="user-name">{{ auth()->user()->name }}</div>
                         <div class="user-role">{{ ucfirst(auth()->user()->cargo) }}</div>
                     </div>
-                    <i class="fas fa-sign-out-alt" style="font-size:10px;color:var(--text-dim)"></i>
-                </div>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    <i class="fas fa-sign-out-alt icone-sair"></i>
+                </button>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
             </div>
@@ -128,13 +129,13 @@
                     <h1>@yield('title', 'Dashboard')</h1>
                     <p>
                         @if(auth()->user()->isAdministrador())
-                            Visão geral da sua barbearia —
+                            Visao geral da sua barbearia -
                         @elseif(auth()->user()->isBarbeiro())
-                            Seus agendamentos —
+                            Seus agendamentos -
                         @else
                             Seus horarios —
                         @endif
-                        <span id="js-date" style="color:var(--gold)"></span>
+                        <span id="js-date" class="data-destaque"></span>
                     </p>
                 </div>
 
@@ -163,6 +164,8 @@
                 year: 'numeric'
             });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/interface.js') }}"></script>
 
 </body>
 

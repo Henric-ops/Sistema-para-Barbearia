@@ -9,7 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("ALTER TABLE users MODIFY cargo ENUM('barbeiro', 'administrador', 'cliente') NOT NULL DEFAULT 'cliente'");
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE users MODIFY cargo ENUM('barbeiro', 'administrador', 'cliente') NOT NULL DEFAULT 'cliente'");
+        }
 
         Schema::table('clientes', function (Blueprint $table) {
             if (! Schema::hasColumn('clientes', 'user_id')) {
@@ -31,6 +33,8 @@ return new class extends Migration
             }
         });
 
-        DB::statement("ALTER TABLE users MODIFY cargo ENUM('barbeiro', 'administrador') NOT NULL DEFAULT 'barbeiro'");
+        if (DB::connection()->getDriverName() !== 'sqlite') {
+            DB::statement("ALTER TABLE users MODIFY cargo ENUM('barbeiro', 'administrador') NOT NULL DEFAULT 'barbeiro'");
+        }
     }
 };

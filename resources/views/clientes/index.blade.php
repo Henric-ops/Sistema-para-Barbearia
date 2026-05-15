@@ -1,104 +1,93 @@
 @extends('layouts.app')
 
+@section('title', 'Clientes')
+
 @section('content')
-
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-
-    <div class="container-fluid py-4">
-
-        <!-- HEADER -->
-        <div
-            class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
-            <div class="slide-in-left">
-                <h2 class="page-title d-flex align-items-center gap-2">
-                    <span class="icon-box">
-                        <i class="fas fa-users"></i>
-                    </span>
+    <div class="conteudo-pagina">
+        <div class="cabecalho-pagina">
+            <div>
+                <h2 class="titulo-pagina d-flex align-items-center gap-2">
+                    <i class="fas fa-users"></i>
                     Clientes
                 </h2>
-                <p class="page-description">
-                    Gerencie os cadastros de clientes
-                </p>
+                <p class="descricao-pagina">Gerencie os cadastros e contatos dos clientes.</p>
             </div>
 
-            <a href="{{ route('clientes.create') }}" class="btn btn-gold"> <i class="fas fa-plus"></i> Novo Cliente
+            <a href="{{ route('clientes.create') }}" class="btn botao-primario">
+                <i class="fas fa-plus"></i>
+                Novo cliente
             </a>
         </div>
 
-        <!-- BUSCA -->
-        <form method="GET" class="mb-4 fade-in delay-200">
-            <div class="input-group custom-search">
-                <span class="input-group-text">
-                    <i class="fas fa-search"></i>
-                </span>
-
-                <input type="search" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou telefone"
-                    class="form-control">
-
-                <button class="btn btn-gold px-4" type="submit">
-                    Buscar
-                </button>
+        <form method="GET" class="barra-filtros">
+            <div class="input-group campo-busca">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou telefone" class="form-control">
             </div>
+            <button class="btn botao-secundario" type="submit">
+                <i class="fas fa-filter"></i>
+                Filtrar
+            </button>
         </form>
 
-        <!-- TABELA -->
-        <div class="card custom-card">
-
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-list"></i> Lista de Clientes</span>
-                <span class="badge badge-gold">
-                    {{ $clientes->count() }}
-                </span>
+        <div class="painel">
+            <div class="painel-cabecalho">
+                <div>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-address-book"></i>
+                        Lista de clientes
+                    </h3>
+                    <div class="painel-subtitulo">Dados essenciais para contato e identificacao.</div>
+                </div>
+                <span class="selo-contador">{{ $clientes->count() }}</span>
             </div>
 
             <div class="table-responsive">
-                <table class="table align-middle custom-table">
+                <table class="table table-hover align-middle tabela-sistema">
                     <thead>
                         <tr>
                             <th>Nome</th>
                             <th>Telefone</th>
                             <th>CPF</th>
                             <th>E-mail</th>
-                            <th class="text-end">Ações</th>
+                            <th class="text-end">Acoes</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @forelse($clientes as $cliente)
                             <tr>
-                                <td>{{ $cliente->nome }}</td>
-                                <td>{{ $cliente->telefone }}</td>
-                                <td>{{ $cliente->cpf }}</td>
-                                <td>{{ $cliente->email }}</td>
-
-                                <td class="text-end d-flex gap-2 justify-content-end">
-                                    <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-sm btn-outline-gold">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-
-                                    <form action="{{ route('clientes.destroy', $cliente) }}" method="POST"
-                                        onsubmit="return confirm('Tem certeza?');">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit" class="btn btn-sm btn-danger-soft">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                <td><strong>{{ $cliente->nome }}</strong></td>
+                                <td class="texto-secundario">{{ $cliente->telefone }}</td>
+                                <td class="texto-secundario">{{ $cliente->cpf }}</td>
+                                <td class="texto-secundario">{{ $cliente->email ?? '-' }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <a href="{{ route('clientes.edit', $cliente) }}" class="botao-icone" data-bs-toggle="tooltip" data-bs-title="Editar cliente" aria-label="Editar cliente">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('clientes.destroy', $cliente) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="botao-icone perigo" data-confirmacao="Tem certeza que deseja excluir este cliente?" data-bs-toggle="tooltip" data-bs-title="Excluir cliente" aria-label="Excluir cliente">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="empty-state">
-                                    Nenhum cliente encontrado.
+                                <td colspan="5">
+                                    <div class="estado-vazio">
+                                        <i class="fas fa-users"></i>
+                                        <p class="mb-0">Nenhum cliente encontrado.</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
         </div>
-
     </div>
 @endsection

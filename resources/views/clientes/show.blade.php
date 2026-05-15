@@ -1,41 +1,52 @@
 @extends('layouts.app')
 
+@section('title', 'Detalhes do Cliente')
+
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="card rounded-lg shadow-md" style="max-width: 600px; margin: 0 auto;">
-            <div class="p-4 border-bottom" style="background: linear-gradient(135deg, #059669 0%, #10B981 100%); color: #fff;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="h3 mb-0 d-flex align-items-center gap-2" style="color: #fff;">
-                        <i class="fas fa-user"></i>
-                        Detalhes do Cliente
-                    </h2>
-                    <a href="{{ route('clientes.index') }}" class="btn btn-outline-light btn-sm">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </a>
+    <div class="conteudo-pagina">
+        <div class="cabecalho-pagina">
+            <div>
+                <h2 class="titulo-pagina d-flex align-items-center gap-2">
+                    <i class="fas fa-user"></i>
+                    Detalhes do cliente
+                </h2>
+                <p class="descricao-pagina">Informacoes cadastrais e contato.</p>
+            </div>
+
+            <a href="{{ route('clientes.index') }}" class="btn botao-secundario">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </a>
+        </div>
+
+        <div class="painel formulario-centralizado">
+            <div class="painel-cabecalho">
+                <div>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-address-card"></i>
+                        {{ $cliente->nome }}
+                    </h3>
+                    <div class="painel-subtitulo">{{ $cliente->email ?? 'Sem e-mail cadastrado' }}</div>
                 </div>
             </div>
 
             <div class="p-4 p-md-5">
                 <div class="row g-4">
-                    <div class="col-12">
-                        <small class="text-muted d-block mb-1">Nome</small>
-                        <div class="fw-semibold">{{ $cliente->nome }}</div>
+                    <div class="col-md-6">
+                        <div class="texto-secundario small text-uppercase fw-bold mb-1">Telefone</div>
+                        <div class="fw-bold">{{ $cliente->telefone }}</div>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block mb-1">Telefone</small>
-                        <div>{{ $cliente->telefone }}</div>
+                        <div class="texto-secundario small text-uppercase fw-bold mb-1">CPF</div>
+                        <div class="fw-bold">{{ $cliente->cpf }}</div>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block mb-1">CPF</small>
-                        <div>{{ $cliente->cpf }}</div>
+                        <div class="texto-secundario small text-uppercase fw-bold mb-1">E-mail</div>
+                        <div>{{ $cliente->email ?? '-' }}</div>
                     </div>
                     <div class="col-md-6">
-                        <small class="text-muted d-block mb-1">E-mail</small>
-                        <div>{{ $cliente->email }}</div>
-                    </div>
-                    <div class="col-md-6">
-                        <small class="text-muted d-block mb-1">Endereço</small>
-                        <div>{{ $cliente->endereco }}</div>
+                        <div class="texto-secundario small text-uppercase fw-bold mb-1">Endereco</div>
+                        <div>{{ $cliente->endereco ?? '-' }}</div>
                     </div>
                 </div>
             </div>

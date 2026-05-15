@@ -1,134 +1,109 @@
 @extends('layouts.app')
 
+@section('title', 'Barbeiros')
+
 @section('content')
-
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
-
-    <div class="container-fluid py-4">
-
-        <!-- ALERT -->
+    <div class="conteudo-pagina">
         @if(session('success'))
-            <div class="alert alert-success fade-in mb-4">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <div class="alert alerta-sistema d-flex align-items-center gap-2 mb-0">
+                <i class="fas fa-check-circle"></i>
+                {{ session('success') }}
             </div>
         @endif
 
-        <!-- HEADER -->
-        <div
-            class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3">
-
-            <div class="slide-in-left">
-                <h2 class="page-title d-flex align-items-center gap-2">
-                    <span class="icon-box">
-                        <i class="fas fa-user-tie"></i>
-                    </span>
+        <div class="cabecalho-pagina">
+            <div>
+                <h2 class="titulo-pagina d-flex align-items-center gap-2">
+                    <i class="fas fa-user-tie"></i>
                     Barbeiros
                 </h2>
-
-                <p class="page-description">
-                    Gerencie os barbeiros da barbearia
-                </p>
+                <p class="descricao-pagina">Gerencie equipe, contatos e acessos dos barbeiros.</p>
             </div>
 
             @if(auth()->user()->isAdministrador())
-                <a href="{{ route('barbeiros.create') }}" class="btn btn-gold btn-md">
-                    <i class="fas fa-plus"></i> Novo Barbeiro
+                <a href="{{ route('barbeiros.create') }}" class="btn botao-primario">
+                    <i class="fas fa-plus"></i>
+                    Novo barbeiro
                 </a>
             @endif
         </div>
 
-        <!-- BUSCA -->
-        <form method="GET" class="mb-4 fade-in delay-200">
-            <div class="input-group custom-search">
-
-                <span class="input-group-text">
-                    <i class="fas fa-search"></i>
-                </span>
-
-                <input type="search" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou e-mail"
-                    class="form-control">
-
-                <button class="btn btn-gold px-4" type="submit">
-                    Buscar
-                </button>
-
+        <form method="GET" class="barra-filtros">
+            <div class="input-group campo-busca">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="search" name="search" value="{{ request('search') }}" placeholder="Buscar por nome ou e-mail" class="form-control">
             </div>
+            <button class="btn botao-secundario" type="submit">
+                <i class="fas fa-filter"></i>
+                Filtrar
+            </button>
         </form>
 
-        <!-- TABELA -->
-        <div class="card custom-card">
-
-            <div class="card-header-custom d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-list"></i> Lista de Barbeiros</span>
-
-                <span class="badge badge-gold">
-                    {{ $barbeiros->total() }}
-                </span>
+        <div class="painel">
+            <div class="painel-cabecalho">
+                <div>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-list"></i>
+                        Lista de barbeiros
+                    </h3>
+                    <div class="painel-subtitulo">Profissionais cadastrados no sistema.</div>
+                </div>
+                <span class="selo-contador">{{ $barbeiros->total() }}</span>
             </div>
 
             <div class="table-responsive">
-                <table class="table align-middle custom-table">
-
+                <table class="table table-hover align-middle tabela-sistema">
                     <thead>
                         <tr>
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
-                            <th class="text-end">Ações</th>
+                            <th class="text-end">Acoes</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @forelse($barbeiros as $barbeiro)
                             <tr>
-                                <td>{{ $barbeiro->name }}</td>
-                                <td>{{ $barbeiro->email }}</td>
-                                <td>{{ $barbeiro->telefone ?? '-' }}</td>
-
-                                <td class="text-end">
-                                    <div class="table-actions">
-
-                                        <a href="{{ route('barbeiros.edit', $barbeiro) }}"
-                                            class="btn btn-table-action btn-outline-primary" title="Editar">
+                                <td><strong>{{ $barbeiro->name }}</strong></td>
+                                <td class="texto-secundario">{{ $barbeiro->email }}</td>
+                                <td class="texto-secundario">{{ $barbeiro->telefone ?? '-' }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <a href="{{ route('barbeiros.edit', $barbeiro) }}" class="botao-icone" data-bs-toggle="tooltip" data-bs-title="Editar barbeiro" aria-label="Editar barbeiro">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
                                         @if(auth()->user()->isAdministrador())
-                                            <form action="{{ route('barbeiros.destroy', $barbeiro) }}" method="POST"
-                                                onsubmit="return confirm('Tem certeza?')">
+                                            <form action="{{ route('barbeiros.destroy', $barbeiro) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-
-                                                <button type="submit" class="btn btn-table-action btn-danger" title="Excluir">
+                                                <button type="submit" class="botao-icone perigo" data-confirmacao="Tem certeza que deseja excluir este barbeiro?" data-bs-toggle="tooltip" data-bs-title="Excluir barbeiro" aria-label="Excluir barbeiro">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
                                         @endif
-
                                     </div>
                                 </td>
                             </tr>
-
                         @empty
                             <tr>
-                                <td colspan="4" class="empty-state">
-                                    Nenhum barbeiro encontrado
+                                <td colspan="4">
+                                    <div class="estado-vazio">
+                                        <i class="fas fa-user-tie"></i>
+                                        <p class="mb-0">Nenhum barbeiro encontrado.</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
-
                 </table>
             </div>
 
-            <!-- PAGINAÇÃO -->
             @if($barbeiros->hasPages())
-                <div class="p-4 border-top">
+                <div class="p-4 border-top border-secondary border-opacity-25">
                     {{ $barbeiros->links() }}
                 </div>
             @endif
-
         </div>
-
     </div>
 @endsection

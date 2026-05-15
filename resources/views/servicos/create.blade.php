@@ -1,111 +1,77 @@
 @extends('layouts.app')
 
+@section('title', 'Novo Servico')
+
 @section('content')
+    <div class="conteudo-pagina">
+        <div class="cabecalho-pagina">
+            <div>
+                <h2 class="titulo-pagina d-flex align-items-center gap-2">
+                    <i class="fas fa-scissors"></i>
+                    Novo servico
+                </h2>
+                <p class="descricao-pagina">Cadastre nome, descricao, preco e duracao do atendimento.</p>
+            </div>
 
-<link rel="stylesheet" href="{{ asset('css/form.css') }}">
-<div class="container-fluid py-4">
+            <a href="{{ route('servicos.index') }}" class="btn botao-secundario">
+                <i class="fas fa-arrow-left"></i>
+                Voltar
+            </a>
+        </div>
 
-    <div class="form-container" style="max-width: 700px; margin: 0 auto;">
-
-        <!-- HEADER -->
-        <div class="form-header">
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="painel formulario-centralizado">
+            <div class="painel-cabecalho">
                 <div>
-                    <h2 class="form-title">
-                        <i class="fas fa-scissors"></i>
-                        Novo Serviço
-                    </h2>
-                    <p class="form-subtitle">
-                        Cadastre um novo serviço
-                    </p>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-list"></i>
+                        Dados do servico
+                    </h3>
+                    <div class="painel-subtitulo">A duracao ajuda a organizar a agenda com precisao.</div>
                 </div>
+            </div>
 
-                <a href="{{ route('servicos.index') }}" class="btn btn-outline-light btn-sm">
-                    <i class="fas fa-arrow-left"></i> Voltar
-                </a>
+            <div class="p-4 p-md-5">
+                <form method="POST" action="{{ route('servicos.store') }}" class="formulario" data-formulario-carregando>
+                    @csrf
+
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input id="nome" type="text" name="nome" value="{{ old('nome') }}" required class="form-control @error('nome') is-invalid @enderror" placeholder="Nome do servico">
+                            @error('nome') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-12">
+                            <label for="descricao" class="form-label">Descricao</label>
+                            <textarea id="descricao" name="descricao" rows="3" class="form-control @error('descricao') is-invalid @enderror" placeholder="Descricao do servico">{{ old('descricao') }}</textarea>
+                            @error('descricao') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="preco" class="form-label">Preco</label>
+                            <input id="preco" type="number" step="0.01" name="preco" value="{{ old('preco') }}" required class="form-control @error('preco') is-invalid @enderror" placeholder="0.00">
+                            @error('preco') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="duracao_minutos" class="form-label">Duracao em minutos</label>
+                            <input id="duracao_minutos" type="number" name="duracao_minutos" value="{{ old('duracao_minutos') }}" required class="form-control @error('duracao_minutos') is-invalid @enderror" placeholder="30">
+                            @error('duracao_minutos') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 mt-5">
+                        <a href="{{ route('servicos.index') }}" class="btn botao-secundario">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn botao-primario">
+                            <i class="fas fa-save"></i>
+                            Salvar servico
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <!-- BODY -->
-        <div class="form-body">
-            <form method="POST" action="{{ route('servicos.store') }}">
-                @csrf
-
-                <!-- NOME -->
-                <div class="form-group-custom">
-                    <label>Nome</label>
-                    <input type="text"
-                        name="nome"
-                        value="{{ old('nome') }}"
-                        required
-                        class="form-control"
-                        placeholder="Nome do serviço">
-
-                    @error('nome')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- DESCRIÇÃO -->
-                <div class="form-group-custom">
-                    <label>Descrição</label>
-                    <textarea
-                        name="descricao"
-                        rows="3"
-                        class="form-control"
-                        placeholder="Descrição do serviço">{{ old('descricao') }}</textarea>
-
-                    @error('descricao')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- PREÇO + DURAÇÃO -->
-                <div class="row">
-                    <div class="col-md-6 form-group-custom">
-                        <label>Preço</label>
-                        <input type="number"
-                            step="0.01"
-                            name="preco"
-                            value="{{ old('preco') }}"
-                            required
-                            class="form-control"
-                            placeholder="0.00">
-
-                        @error('preco')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 form-group-custom">
-                        <label>Duração (minutos)</label>
-                        <input type="number"
-                            name="duracao_minutos"
-                            value="{{ old('duracao_minutos') }}"
-                            required
-                            class="form-control"
-                            placeholder="30">
-
-                        @error('duracao_minutos')
-                            <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- ACTIONS -->
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-gold">
-                        <i class="fas fa-save"></i> Salvar serviço
-                    </button>
-
-                    <a href="{{ route('servicos.index') }}" class="btn btn-outline-secondary">
-                        <i class="fas fa-times"></i> Cancelar
-                    </a>
-                </div>
-
-            </form>
-        </div>
     </div>
-
-</div>
 @endsection

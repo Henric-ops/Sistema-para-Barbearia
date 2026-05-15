@@ -1,72 +1,91 @@
 @extends('layouts.app')
 
-@section('content')
-    <div class="container-fluid py-4">
+@section('title', 'Meus Agendamentos')
 
+@section('content')
+    <div class="conteudo-pagina">
         @if(session('success'))
-            <div class="alert d-flex align-items-center gap-2">
+            <div class="alert alerta-sistema d-flex align-items-center gap-2 mb-0">
                 <i class="fas fa-check-circle"></i>
                 {{ session('success') }}
             </div>
         @endif
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="cabecalho-pagina">
             <div>
-                <h2 class="page-title d-flex align-items-center gap-2">
+                <h2 class="titulo-pagina d-flex align-items-center gap-2">
                     <i class="fas fa-calendar-alt"></i>
-                    Meus Agendamentos
+                    Meus agendamentos
                 </h2>
-                <p class="page-description">Seus agendamentos como barbeiro.</p>
+                <p class="descricao-pagina">Consulte sua agenda e atualize o status dos atendimentos.</p>
             </div>
         </div>
 
-        <div class="card agendamento-table">
-            <div class="card-header-custom d-flex justify-content-between p-3">
-                <span class="d-flex align-items-center gap-2">
-                    <i class="fas fa-list"></i>
-                    Lista de Agendamentos
+        <div class="painel">
+            <div class="painel-cabecalho">
+                <div>
+                    <h3 class="painel-titulo">
+                        <i class="fas fa-list-check"></i>
+                        Lista de atendimentos
+                    </h3>
+                    <div class="painel-subtitulo">Ordenada dos mais recentes para os mais antigos.</div>
+                </div>
+                <span class="selo-contador">
+                    <i class="fas fa-calendar-check"></i>
+                    {{ $agendamentos->count() }}
                 </span>
-                <span class="badge badge-primary">{{ $agendamentos->count() }}</span>
             </div>
 
             <div class="table-responsive">
-                <table class="table agendamento-table align-middle">
+                <table class="table table-hover align-middle tabela-sistema">
                     <thead>
                         <tr>
                             <th>Cliente</th>
-                            <th>Serviço</th>
-                            <th>Início</th>
+                            <th>Servico</th>
+                            <th>Inicio</th>
                             <th>Fim</th>
                             <th>Status</th>
-                            <th class="text-end">Ações</th>
+                            <th class="text-end">Acao</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($agendamentos as $agendamento)
                             <tr>
-                                <td><strong class="cliente-nome">{{ $agendamento->cliente->nome }}</strong></td>
+                                <td><strong>{{ $agendamento->cliente->nome }}</strong></td>
                                 <td>
-                                    <span class="badge servico-badge">{{ $agendamento->servico->nome }}</span>
+                                    <span class="selo-servico">
+                                        <i class="fas fa-scissors"></i>
+                                        {{ $agendamento->servico->nome }}
+                                    </span>
                                 </td>
-                                <td><span class="datatime">{{ $agendamento->data_hora_inicio->format('d/m/Y H:i') }}</span></td>
-                                <td><span class="datatime">{{ $agendamento->data_hora_fim->format('d/m/Y H:i') }}</span></td>
+                                <td><span class="texto-horario">{{ $agendamento->data_hora_inicio->format('d/m/Y H:i') }}</span></td>
+                                <td><span class="texto-horario">{{ $agendamento->data_hora_fim->format('d/m/Y H:i') }}</span></td>
                                 <td>
-                                    <span class="status-chip status-chip--{{ $agendamento->status }}">
+                                    <span class="status-agendamento {{ $agendamento->status }}">
                                         {{ ucfirst($agendamento->status) }}
                                     </span>
                                 </td>
-                                <td class="text-end">
-                                    <a href="{{ route('agendamentos.edit', $agendamento) }}"
-                                        class="btn btn-sm btn-table-action btn-outline-primary" title="Alterar status">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                <td>
+                                    <div class="d-flex justify-content-end">
+                                        <a
+                                            href="{{ route('agendamentos.edit', $agendamento) }}"
+                                            class="botao-icone"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-title="Atualizar status"
+                                            aria-label="Atualizar status"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center py-5">
-                                    <i class="fas fa-calendar-times fa-3x text-muted mb-3 d-block"></i>
-                                    <p class="text-muted mb-0">Nenhum agendamento encontrado</p>
+                                <td colspan="6">
+                                    <div class="estado-vazio">
+                                        <i class="fas fa-calendar-times"></i>
+                                        <p class="mb-0">Nenhum agendamento encontrado.</p>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
@@ -74,6 +93,5 @@
                 </table>
             </div>
         </div>
-
     </div>
 @endsection

@@ -1,0 +1,207 @@
+/* Telas publicas de autenticacao do BarberHub */
+
+:root {
+    --auth-fundo: #0d0d0f;
+    --auth-painel: #18181e;
+    --auth-campo: #202027;
+    --auth-borda: rgba(255, 255, 255, .09);
+    --auth-texto: #f4f0e8;
+    --auth-suave: #9f988c;
+    --auth-fraco: #686259;
+    --auth-ouro: #c9a84c;
+    --auth-ouro-claro: #e8c97a;
+    --auth-erro: #e05c5c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 16% 22%, rgba(201, 168, 76, .11), transparent 28rem),
+        radial-gradient(circle at 82% 78%, rgba(106, 164, 223, .08), transparent 24rem),
+        var(--auth-fundo);
+    color: var(--auth-texto);
+    font-family: "DM Sans", sans-serif;
+}
+
+.auth-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(320px, .9fr) minmax(360px, 1.1fr);
+}
+
+.auth-marca {
+    padding: clamp(2rem, 5vw, 4rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--auth-borda);
+    background: rgba(255, 255, 255, .018);
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: .9rem;
+    color: var(--auth-texto);
+    font-family: "Playfair Display", serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.auth-logo-icone {
+    width: 2.85rem;
+    height: 2.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--auth-ouro), var(--auth-ouro-claro));
+    color: #111217;
+    box-shadow: 0 18px 40px rgba(201, 168, 76, .18);
+}
+
+.auth-chamada {
+    max-width: 34rem;
+}
+
+.auth-chamada h1 {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.6rem, 5vw, 4.8rem);
+    line-height: 1.02;
+    margin: 0 0 1rem;
+}
+
+.auth-chamada span {
+    color: var(--auth-ouro);
+}
+
+.auth-chamada p,
+.auth-rodape {
+    color: var(--auth-suave);
+    line-height: 1.7;
+}
+
+.auth-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1.5rem, 4vw, 4rem);
+}
+
+.auth-card {
+    width: min(100%, 34rem);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), transparent 9rem), var(--auth-painel);
+    border: 1px solid var(--auth-borda);
+    border-radius: 18px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, .32);
+}
+
+.auth-card h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.auth-card p {
+    color: var(--auth-suave);
+    margin: .4rem 0 0;
+}
+
+.auth-form {
+    margin-top: 2rem;
+}
+
+.auth-form .form-label {
+    color: var(--auth-suave);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.auth-form .form-control {
+    background: var(--auth-campo);
+    border-color: var(--auth-borda);
+    color: var(--auth-texto);
+    min-height: 3.15rem;
+    border-radius: 11px;
+}
+
+.auth-form .form-control:focus {
+    background: var(--auth-campo);
+    border-color: var(--auth-ouro);
+    color: var(--auth-texto);
+    box-shadow: 0 0 0 .2rem rgba(201, 168, 76, .16);
+}
+
+.auth-form .form-control::placeholder {
+    color: var(--auth-fraco);
+}
+
+.auth-form .input-group .btn {
+    border-color: var(--auth-borda);
+    color: var(--auth-suave);
+    background: var(--auth-campo);
+    border-radius: 0 11px 11px 0;
+}
+
+.auth-form .input-group .btn:hover {
+    color: var(--auth-ouro);
+    border-color: var(--auth-ouro);
+}
+
+.auth-botao {
+    width: 100%;
+    min-height: 3.2rem;
+    border: 0;
+    border-radius: 11px;
+    background: linear-gradient(135deg, var(--auth-ouro), var(--auth-ouro-claro));
+    color: #111217;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+}
+
+.auth-link {
+    color: var(--auth-ouro);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    color: var(--auth-ouro-claro);
+}
+
+.auth-alerta {
+    background: rgba(224, 92, 92, .1);
+    border: 1px solid rgba(224, 92, 92, .28);
+    color: #ffaaa5;
+    border-radius: 12px;
+}
+
+.auth-divisor {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--auth-borda);
+    text-align: center;
+    color: var(--auth-suave);
+}
+
+@media (max-width: 920px) {
+    .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-marca {
+        display: none;
+    }
+}
