@@ -11,7 +11,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap"
         rel="stylesheet" />
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('css/componentes.css') }}" rel="stylesheet" />
 </head>
 
@@ -21,9 +20,12 @@
         <!-- SIDEBAR -->
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <div class="brand-icon"><i class="fas fa-scissors"></i></div>
+                <div class="brand-icon">
+                    <img src="{{ asset('img/logobarber.png') }}" alt="BarberHub" class="brand-image">
+                </div>
                 <div>
                     <div class="brand-text">BarberHub</div>
+                    <div class="brand-sub">barberclub</div>
                 </div>
             </div>
 

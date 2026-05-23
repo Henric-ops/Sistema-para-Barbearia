@@ -13,13 +13,33 @@
     <div class="auth-shell">
         <aside class="auth-marca">
             <div class="auth-logo">
-                <span class="auth-logo-icone"><i class="fas fa-scissors"></i></span>
-                BarberHub
+                <span class="auth-logo-icone">
+                    <img src="{{ asset('img/logobarber.png') }}" alt="BarberHub">
+                </span>
+                <div>
+                    <div>BarberHub</div>
+                    <div class="auth-logo-sub">barberclub</div>
+                </div>
+            </div>
+
+            <div class="auth-menu-falso" aria-hidden="true">
+                <div class="auth-menu-item ativo">
+                    <i class="fas fa-gauge-high"></i>
+                    Dashboard
+                </div>
+                <div class="auth-menu-item">
+                    <i class="fas fa-calendar-check"></i>
+                    Agendamentos
+                </div>
+                <div class="auth-menu-item">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </div>
             </div>
 
             <div class="auth-chamada">
                 <h1>Gestao afiada para sua <span>barbearia.</span></h1>
-                <p>Organize agenda, clientes, barbeiros e servicos em uma experiencia limpa, rapida e com identidade propria.</p>
+                <p>Acesse o painel para acompanhar agenda, clientes, servicos e atendimento em uma experiencia unica.</p>
             </div>
 
             <div class="auth-rodape">Agenda, atendimento e controle em um so lugar.</div>
@@ -42,14 +62,20 @@
                 <form method="POST" action="{{ route('login') }}" class="auth-form" data-formulario-carregando>
                     @csrf
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">E-mail</label>
+                    <div class="mb-3 form-group">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            E-mail
+                        </label>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="email@exemplo.com" required autocomplete="email" autofocus>
                         @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Senha</label>
+                    <div class="mb-4 form-group">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock"></i>
+                            Senha
+                        </label>
                         <div class="input-group">
                             <input id="password" type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Digite sua senha" required autocomplete="current-password">
                             <button class="btn btn-outline-secondary" type="button" id="alternarSenha" aria-label="Mostrar senha">
@@ -74,6 +100,7 @@
     </div>
 
     <script src="{{ asset('js/interface.js') }}"></script>
+    <script src="{{ asset('js/auth.js') }}"></script>
     <script>
         document.getElementById('alternarSenha')?.addEventListener('click', function () {
             const campo = document.getElementById('password');

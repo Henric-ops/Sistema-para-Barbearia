@@ -173,10 +173,9 @@ Hoje ha CSS espalhado entre views e arquivos em `public/css`. A proposta e usar 
 
 ### Organizacao proposta de estilos
 
-- `public/css/style.css`: base do painel autenticado.
-- `public/css/auth.css`: telas de login e cadastro.
-- `public/css/components.css`: botoes, cards, tabelas, chips, formularios e estados.
-- `public/js/app-ui.js`: inicializacao de tooltips, modais, confirmacoes e pequenos comportamentos Bootstrap.
+- `public/css/componentes.css`: base do painel autenticado, tokens visuais e componentes do sistema.
+- `public/css/autenticacao.css`: telas de login e cadastro.
+- `public/js/interface.js`: inicializacao de tooltips, confirmacoes, estados de envio e pequenos comportamentos Bootstrap.
 
 ### Experiencia por area
 
