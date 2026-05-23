@@ -8,6 +8,7 @@ use App\Models\Servico;
 use App\Models\User;
 use App\Http\Requests\StoreAgendamentoRequest;
 use App\Http\Requests\UpdateAgendamentoRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,9 +17,12 @@ class AgendamentoController extends Controller
     public function index(Request $request)
     {
         $query = Agendamento::with('cliente', 'servico', 'barbeiro');
+        $dataSelecionada = Carbon::parse($request->input('data', now()->toDateString()))->startOfDay();
+        $barbeiroSelecionado = $request->input('barbeiro_id');
 
         if (Auth::user()->isBarbeiro()) {
             $query->where('barbeiro_id', Auth::id());
+            $barbeiroSelecionado = Auth::id();
         }
 
         if (Auth::user()->isCliente()) {
@@ -26,6 +30,12 @@ class AgendamentoController extends Controller
             abort_unless($cliente, 404, 'Perfil de cliente nao encontrado.');
             $query->where('cliente_id', $cliente->id);
         }
+
+        if ($barbeiroSelecionado && Auth::user()->isAdministrador()) {
+            $query->where('barbeiro_id', $barbeiroSelecionado);
+        }
+
+        $query->whereDate('data_hora_inicio', $dataSelecionada);
 
         if ($request->filled('search')) {
             $term = '%' . $request->search . '%';
@@ -35,8 +45,38 @@ class AgendamentoController extends Controller
             });
         }
 
-        $agendamentos = $query->get();
-        return view('agendamentos.index', compact('agendamentos'));
+        $agendamentos = $query
+            ->orderBy('data_hora_inicio')
+            ->get();
+
+        $barbeirosFiltro = User::where('cargo', 'barbeiro')->orderBy('name')->get();
+
+        $barbeiros = Auth::user()->isBarbeiro()
+            ? collect([Auth::user()])
+            : $barbeirosFiltro;
+
+        if (Auth::user()->isCliente()) {
+            $barbeiros = $agendamentos
+                ->pluck('barbeiro')
+                ->filter()
+                ->unique('id')
+                ->values();
+        }
+
+        if ($barbeiroSelecionado && ! Auth::user()->isBarbeiro()) {
+            $barbeiros = $barbeiros->where('id', (int) $barbeiroSelecionado)->values();
+        }
+
+        return view('agendamentos.index', [
+            'agendamentos' => $agendamentos,
+            'agendamentosPorBarbeiro' => $agendamentos->groupBy('barbeiro_id'),
+            'barbeiros' => $barbeiros,
+            'barbeirosFiltro' => $barbeirosFiltro,
+            'dataSelecionada' => $dataSelecionada,
+            'dataAnterior' => $dataSelecionada->copy()->subDay(),
+            'dataProxima' => $dataSelecionada->copy()->addDay(),
+            'barbeiroSelecionado' => $barbeiroSelecionado,
+        ]);
     }
 
     public function create()

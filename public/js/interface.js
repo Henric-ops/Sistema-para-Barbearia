@@ -36,6 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    document.querySelectorAll('[data-auto-submit]').forEach((elemento) => {
+        elemento.addEventListener('change', () => {
+            elemento.form?.submit();
+        });
+    });
+
     document.querySelectorAll('[data-formulario-agenda]').forEach((formulario) => {
         const servico = formulario.querySelector('[data-servico-agenda]');
         const inicio = formulario.querySelector('[data-inicio-agenda]');
@@ -59,6 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         servico.addEventListener('change', atualizarFim);
         inicio.addEventListener('change', atualizarFim);
+    });
+
+    document.querySelectorAll('[data-agenda-dia]').forEach((agenda) => {
+        agenda.querySelectorAll('.agenda-card').forEach((card) => {
+            const inicio = Number(card.dataset.inicioMin || 0);
+            const duracao = Number(card.dataset.duracaoMin || 30);
+            const trilha = card.closest('[data-total-minutos]');
+            const totalMinutos = Number(trilha?.dataset.totalMinutos || 600);
+            const alturaMinuto = trilha ? trilha.clientHeight / totalMinutos : 1.65;
+
+            card.style.top = `${inicio * alturaMinuto}px`;
+            card.style.minHeight = `${Math.max(56, duracao * alturaMinuto - 8)}px`;
+        });
     });
 });
 

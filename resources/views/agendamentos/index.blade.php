@@ -1,10 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Agenda')
+@section('title', 'Minha agenda')
 
 @section('content')
-    <div class="conteudo-pagina">
+    @php
+        $horaInicial = 8;
+        $horaFinal = 18;
+        $inicioAgendaMinutos = $horaInicial * 60;
+        $totalMinutosAgenda = ($horaFinal - $horaInicial) * 60;
+        $horasAgenda = range($horaInicial, $horaFinal);
+    @endphp
 
+    <div class="conteudo-pagina">
         @if(session('success'))
             <div class="alert alerta-sistema d-flex align-items-center gap-2 mb-0">
                 <i class="fas fa-check-circle"></i>
@@ -12,154 +19,148 @@
             </div>
         @endif
 
-        <div class="cabecalho-pagina">
+        <section class="agenda-controles painel">
             <div>
                 <h2 class="titulo-pagina d-flex align-items-center gap-2">
                     <i class="fas fa-calendar-alt"></i>
-                    Agenda
+                    Minha agenda
                 </h2>
-                <p class="descricao-pagina">
-                    Acompanhe horarios, barbeiros, servicos e status dos atendimentos.
-                </p>
+                <p class="descricao-pagina">Timeline clara para acompanhar horarios, barbeiros e status.</p>
             </div>
 
-            @if(auth()->user()->isAdministrador())
-                <a href="{{ route('agendamentos.create') }}" class="btn botao-primario">
-                    <i class="fas fa-plus"></i>
-                    Novo agendamento
-                </a>
-            @endif
-        </div>
+            <form method="GET" class="agenda-filtros">
+                @if(request('search'))
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                @endif
 
-        <form method="GET" class="barra-filtros">
-            <div class="input-group campo-busca">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input
-                    type="search"
-                    name="search"
-                    value="{{ request('search') }}"
-                    placeholder="Buscar por cliente ou barbeiro"
-                    class="form-control"
-                >
-            </div>
-            <button class="btn botao-secundario" type="submit">
-                <i class="fas fa-filter"></i>
-                Filtrar
-            </button>
-        </form>
-
-        <div class="painel">
-
-            <div class="painel-cabecalho">
-                <div>
-                    <h3 class="painel-titulo">
-                        <i class="fas fa-list-check"></i>
-                        Agendamentos
-                    </h3>
-                    <div class="painel-subtitulo">
-                        Lista geral filtrada conforme seu perfil de acesso.
-                    </div>
+                <div class="agenda-segmentos" aria-label="Modo de visualizacao">
+                    <span class="ativo">Dia</span>
                 </div>
-                <span class="selo-contador">
-                    <i class="fas fa-calendar-check"></i>
-                    {{ $agendamentos->count() }}
-                </span>
-            </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover align-middle tabela-sistema">
+                <div class="agenda-navegacao">
+                    <a class="botao-icone" href="{{ route('agendamentos.index', array_filter([
+                        'data' => $dataAnterior->toDateString(),
+                        'barbeiro_id' => $barbeiroSelecionado,
+                        'search' => request('search'),
+                    ])) }}" aria-label="Dia anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
 
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Barbeiro</th>
-                            <th>Serviço</th>
-                            <th>Início</th>
-                            <th>Fim</th>
-                            <th>Status</th>
-                            <th class="text-end">Ações</th>
-                        </tr>
-                    </thead>
+                    <a class="btn botao-secundario" href="{{ route('agendamentos.index', array_filter([
+                        'data' => now()->toDateString(),
+                        'barbeiro_id' => $barbeiroSelecionado,
+                        'search' => request('search'),
+                    ])) }}">
+                        Hoje
+                    </a>
 
-                    <tbody>
-                        @forelse($agendamentos as $agendamento)
-                            <tr>
-                                <td>
-                                    <strong>{{ $agendamento->cliente->nome }}</strong>
-                                </td>
-                                <td class="texto-secundario">{{ $agendamento->barbeiro->name }}</td>
+                    <a class="botao-icone" href="{{ route('agendamentos.index', array_filter([
+                        'data' => $dataProxima->toDateString(),
+                        'barbeiro_id' => $barbeiroSelecionado,
+                        'search' => request('search'),
+                    ])) }}" aria-label="Proximo dia">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
 
-                                <td>
-                                    <span class="selo-servico">
-                                        <i class="fas fa-scissors"></i>
-                                        {{ $agendamento->servico->nome }}
-                                    </span>
-                                </td>
+                @if(! auth()->user()->isBarbeiro())
+                    <select name="barbeiro_id" class="form-select agenda-select" data-auto-submit>
+                        <option value="">Todos os barbeiros</option>
+                        @foreach($barbeirosFiltro as $barbeiroOpcao)
+                            <option value="{{ $barbeiroOpcao->id }}" {{ (string) $barbeiroSelecionado === (string) $barbeiroOpcao->id ? 'selected' : '' }}>
+                                {{ $barbeiroOpcao->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                @endif
 
-                                <td>
-                                    <span class="texto-horario">
-                                        {{ $agendamento->data_hora_inicio->format('d/m/Y H:i') }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="texto-horario">
-                                        {{ $agendamento->data_hora_fim->format('d/m/Y H:i') }}
-                                    </span>
-                                </td>
+                <input type="date" name="data" value="{{ $dataSelecionada->toDateString() }}" class="form-control agenda-data" data-auto-submit>
+            </form>
+        </section>
 
-                                <td>
-                                    <span class="status-agendamento {{ $agendamento->status }}">
-                                        {{ ucfirst($agendamento->status) }}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <div class="d-flex gap-2 justify-content-end">
-                                    @if(auth()->user()->isAdministrador() || auth()->id() === $agendamento->barbeiro_id)
-                                        <a href="{{ route('agendamentos.edit', $agendamento) }}"
-                                            class="botao-icone"
-                                            data-bs-toggle="tooltip"
-                                            data-bs-title="Editar agendamento"
-                                            aria-label="Editar agendamento">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    @endif
-
-                                    @if(auth()->user()->isAdministrador())
-                                        <form action="{{ route('agendamentos.destroy', $agendamento) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button
-                                                class="botao-icone perigo"
-                                                type="submit"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-title="Excluir agendamento"
-                                                data-confirmacao="Tem certeza que deseja excluir este agendamento?"
-                                                aria-label="Excluir agendamento">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7">
-                                    <div class="estado-vazio">
-                                        <i class="fas fa-calendar-times"></i>
-                                        <p class="mb-0">Nenhum agendamento encontrado.</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-
-                </table>
-            </div>
-
+        <div class="agenda-resumo">
+            <span class="selo-contador">Periodo {{ $dataSelecionada->format('d/m/Y') }}</span>
+            <span class="selo-contador">{{ $barbeiroSelecionado ? 'Barbeiro selecionado' : 'Todos os barbeiros' }}</span>
+            <span class="selo-contador">{{ $agendamentos->count() }} agendamento(s)</span>
         </div>
 
+        <section class="agenda-dia" data-agenda-dia>
+            <div class="agenda-horarios">
+                <div class="agenda-canto"></div>
+                @foreach($horasAgenda as $hora)
+                    <div class="agenda-hora" data-agenda-hora>{{ str_pad($hora, 2, '0', STR_PAD_LEFT) }}:00</div>
+                @endforeach
+            </div>
+
+            <div class="agenda-colunas">
+                @forelse($barbeiros as $barbeiro)
+                    <div class="agenda-coluna">
+                        <div class="agenda-barbeiro">{{ $barbeiro->name }}</div>
+                        <div class="agenda-trilha" data-total-minutos="{{ $totalMinutosAgenda }}">
+                            @for($hora = $horaInicial; $hora < $horaFinal; $hora++)
+                                <div class="agenda-linha-hora"></div>
+                            @endfor
+
+                            @foreach($agendamentosPorBarbeiro->get($barbeiro->id, collect()) as $agendamento)
+                                @php
+                                    $inicioMinutos = ($agendamento->data_hora_inicio->hour * 60) + $agendamento->data_hora_inicio->minute - $inicioAgendaMinutos;
+                                    $duracaoMinutos = max(30, $agendamento->data_hora_inicio->diffInMinutes($agendamento->data_hora_fim));
+                                @endphp
+
+                                <article
+                                    class="agenda-card status-{{ $agendamento->status }}"
+                                    data-inicio-min="{{ max(0, $inicioMinutos) }}"
+                                    data-duracao-min="{{ $duracaoMinutos }}"
+                                >
+                                    <div class="agenda-card-topo">
+                                        <strong>
+                                            {{ $agendamento->data_hora_inicio->format('H:i') }}
+                                            - {{ $agendamento->data_hora_fim->format('H:i') }}
+                                        </strong>
+                                        <span class="status-agendamento {{ $agendamento->status }}">
+                                            {{ ucfirst($agendamento->status) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="agenda-card-corpo">
+                                        <span>{{ $agendamento->cliente->nome }}</span>
+                                        <span class="agenda-card-servico">{{ $agendamento->servico->nome }}</span>
+                                    </div>
+
+                                    <div class="agenda-card-acoes">
+                                        <a href="{{ route('agendamentos.show', $agendamento) }}" data-bs-toggle="tooltip" data-bs-title="Ver detalhes" aria-label="Ver detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        @if(auth()->user()->isAdministrador() || auth()->id() === $agendamento->barbeiro_id)
+                                            <a href="{{ route('agendamentos.edit', $agendamento) }}" data-bs-toggle="tooltip" data-bs-title="Editar" aria-label="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endif
+
+                                        @if(auth()->user()->isAdministrador())
+                                            <form action="{{ route('agendamentos.destroy', $agendamento) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" data-confirmacao="Tem certeza que deseja excluir este agendamento?" data-bs-toggle="tooltip" data-bs-title="Excluir" aria-label="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                    </div>
+                @empty
+                    <div class="painel">
+                        <div class="estado-vazio">
+                            <i class="fas fa-user-tie"></i>
+                            <p class="mb-0">Nenhum barbeiro para exibir nesta agenda.</p>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+        </section>
     </div>
 @endsection
